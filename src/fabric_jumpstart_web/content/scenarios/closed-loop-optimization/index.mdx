@@ -73,44 +73,13 @@ This is the money moment of the demo: a machine sitting at 15–20% defects gets
 - **Fabric workspace** — with contributor or admin permissions, assigned to the capacity above.
 - The [`fabric-jumpstart`](https://pypi.org/project/fabric-jumpstart/) Python package (`pip install fabric-jumpstart`) — or run the install from a Fabric notebook, where it is already available.
 
-## 🚀 Install
-
-Install straight from the registry — in a Fabric notebook (auto-detects the current workspace) or anywhere with `az login`:
-
-```python
-import fabric_jumpstart as jumpstart
-
-jumpstart.install("closed-loop-optimization")
-# or target another workspace explicitly:
-jumpstart.install("closed-loop-optimization", workspace_id="<workspace-guid>")
-```
-
-This deploys the Eventhouse + KQL Database, the three notebooks, the Real-Time Dashboard, and the Activator.
-
-### Ad-hoc install (before the registry entry)
-
-You can also deploy directly from the source repository with `_install_from_github`, which runs the same pipeline as `install()`:
-
-```python
-import fabric_jumpstart as jumpstart
-
-jumpstart._install_from_github(
-    logical_id="closed-loop-optimization",
-    repo_url="https://github.com/DaSenf1860/jumpstart-closed-loop-optimization",
-    repo_ref="v1.0.0",                       # tag or commit SHA — not a branch
-    workspace_path="closedloopoptimization/",
-    entry_point="PostDeploymentNotebook.Notebook",
-    items_in_scope=["Eventhouse", "KQLDatabase", "Notebook", "KQLDashboard", "Reflex"],
-)
-```
-
 ## ▶️ Run it
 
 After installing, open **`PostDeploymentNotebook`** in the workspace and click **Run all**. It will:
 
-1. ✅ Seed ~2 hours of convergence history so the dashboard has depth immediately.
+1. ✅ Seed ~2 hours of convergence history so the dashboard has depth immediately (a fast backfill of past-dated data — not two hours of runtime).
 2. ✅ (Optionally) deploy the operator console app and wire the human-in-the-loop approval path.
-3. ✅ Run the demo **live**: the controller generates telemetry continuously while the bridge publishes KPIs every ~10 seconds.
+3. ✅ Run the demo **live** — the controller generates telemetry continuously while the bridge publishes KPIs every ~10 seconds. The live window defaults to **`GENERATE_MINUTES = 30` minutes** to keep capacity usage predictable; raise it (e.g. `120`) for a longer run, or simply re-run the final cell for more.
 
 Within a minute or two, open **`ClosedLoopDashboard`** and watch the loop work.
 
